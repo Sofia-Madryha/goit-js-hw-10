@@ -1,7 +1,6 @@
 import { fetchBreeds, fetchCatByBreed } from './cat-api';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-
 const loader = document.querySelector('.loader');
 const error = document.querySelector('.error');
 const breedSelect = document.querySelector('.breed-select');
@@ -29,9 +28,13 @@ function handlerChange(evt) {
   const breedId = evt.target.value;
   fetchCatByBreed(breedId)
     .then(cat => createMarkupInfo(cat))
-    .catch(err => (err = error.classList.remove('notvisible')))
+    .catch(err => {
+      console.log(err);
+      Notify.failure('Oops, something went wrong!');
+    })
     .finally(() => {
       loader.classList.add('notvisible');
+      // error.classList.add('notvisible');
     });
 }
 
@@ -42,7 +45,6 @@ function createMarkupSelect(breeds) {
     })
     .join('');
   breedSelect.insertAdjacentHTML('beforeend', markupBreeds);
-  
 }
 
 function createMarkupInfo(cat) {
